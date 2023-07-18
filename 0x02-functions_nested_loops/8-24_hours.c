@@ -1,25 +1,27 @@
 #include "main.h"
 
 /**
- * print_alphabet_x10 - function
+ * jack_bauer- function
  *
- * Description: takes no argument and print all alphabet
- * in lower case followed by a newline 10 times
+ * Description: prints every minute of the day
  *
- * Return: Always 0.
+ * Return: it have no return value
  */
 
-void print_alphabet_x10(void)
+void jack_bauer(void)
 {
-	int j;
-	char i;
+	int j, i;
 
-	for (j = 0; j < 10; j++)
+	for (j = 0; j < 24; j++)
 	{
-		for (i = 'a'; i <= 'z'; i++)
+		for (i = 0; i < 60; i++)
 		{
-			_putchar(i);
+			_putchar('0' + j / 10);
+			_putchar('0' + j % 10);
+			_putchar(':');
+			_putchar('0' + i / 10);
+			_putchar('0' + i % 10);
+			_putchar('\n');
 		}
-		_putchar('\n');
 	}
 }
