@@ -11,4 +11,5 @@ void free_grid(int **grid, int height);
 int len(char *s);
 char *argstostr(int ac, char **av);
 char **strtow(char *str);
+int cheack(char **array, char *str, int l,int state);
 #endif
