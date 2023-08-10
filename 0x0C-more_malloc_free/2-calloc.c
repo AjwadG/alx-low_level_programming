@@ -1,5 +1,5 @@
 #include "main.h"
-#include <string.h>
+
 /**
  * _calloc -  creates an array of all 0
  * @size: number of bytes for each elemnt
@@ -21,6 +21,29 @@ void *_calloc(unsigned int nmemb, unsigned int size)
 	if (!array)
 		return (NULL);
 
-	memset(array, 0, nmemb * size);
+	_memset(array, 0, nmemb * size);
 	return (array);
+}
+
+/**
+ * _memset - function
+ *
+ * @s: a pointer to string that (n) of it will be filled by (b)
+ * @b: the byte that will be sued to fill s.
+ * @n: the number of bytes to fill as int.
+ *
+ * Description: fills memory with a constant byte (b).
+ *
+ * Return: a pointer to the memory area s.
+ */
+
+char *_memset(char *s, char b, unsigned int n)
+{
+	unsigned int i;
+
+	for (i = 0; i < n; i++)
+	{
+		s[i] = b;
+	}
+	return (s);
 }
