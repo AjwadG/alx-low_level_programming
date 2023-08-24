@@ -23,3 +23,16 @@ size_t print_list(const list_t *h)
 	}
 	return (i);
 }
+
+/**
+ * len - calculates the len of string
+ * @s: pointer to string
+ * Return: the lenght of the string
+ */
+int len(const char *s)
+{
+	if (!s || !*s)
+		return (0);
+	else
+		return (1 + len(&s[1]));
+}
