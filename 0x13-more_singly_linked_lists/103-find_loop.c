@@ -10,17 +10,23 @@
  */
 listint_t *find_listint_loop(listint_t *head)
 {
-	listint_t *tmp = NULL;
+	listint_t *tmp1, *tmp2;
 
-	if (head == NULL)
-		return (0);
-	while (head != NULL)
+	if (!head)
+		return (head);
+	tmp1 = head->next;
+	while (tmp1)
 	{
-		if (exists(head, tmp))
-			return (head);
-		add_nodeint_end(&tmp, head->n);
-		head = head->next;
+		if (tmp1 == tmp1->next)
+			return (tmp1);
+		tmp2 = head;
+		while (tmp1 != tmp2)
+		{
+			if (tmp2 == tmp1->next)
+				return (tmp2);
+			tmp2 = tmp2->next;
+		}
+		tmp1 = tmp1->next;
 	}
-	free_listint(tmp);
-	return (NULL);
+	return (tmp1);
 }
