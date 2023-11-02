@@ -31,7 +31,7 @@ int hash_table_set(hash_table_t *ht, const char *key, const char *value)
  * @key: pointer to key
  * @value: pointer to value
  *
- * Return: address of the new element or NULL
+ * Return: 0 if succeded 1 otehr wise
  */
 int add_node(hash_node_t **head, const char *key, const char *value)
 {
