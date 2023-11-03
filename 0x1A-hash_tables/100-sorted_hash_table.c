@@ -18,6 +18,8 @@ shash_table_t *shash_table_create(unsigned long int size)
 	if (!new)
 		return (new);
 	new->size = size;
+	new->shead = NULL;
+	new->stail = NULL;
 	new->array = malloc(sizeof(shash_node_t *) * size);
 	if (!new->array)
 	{
@@ -42,16 +44,47 @@ shash_table_t *shash_table_create(unsigned long int size)
  */
 int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 {
+	shash_node_t *tmp, *ptr;
 	unsigned long int i;
 
 	if (!ht)
-		return (1);
-	i = key_index((const unsigned char *)key, ht->size);
-	if (add_node(&ht->array[i], key, value))
 		return (0);
+	i = key_index((const unsigned char *)key, ht->size);
+	for (tmp = ht->array[i]; tmp; tmp = tmp->next)
+	{
+		if (!strcmp(key, tmp->key))
+		{
+			free(tmp->value);
+			tmp->value = strdup(value);
+			return (1);
+		}
+	}
+	tmp = malloc(sizeof(shash_node_t));
+	if (!tmp)
+		return (0);
+	tmp->value = strdup(value), tmp->next = ht->array[i], tmp->sprev = NULL;
+	tmp->snext = NULL, tmp->key = strdup(key), ht->array[i] = tmp;
+	if (!ht->shead)
+		ht->shead = tmp, ht->stail = tmp;
+	else
+	{
+		for (ptr = ht->shead; ptr; ptr = ptr->snext)
+		{
+			if (strcmp(tmp->key, ptr->key) < 0)
+			{
+				tmp->sprev = ptr->sprev, tmp->snext = ptr, ptr->sprev = tmp;
+				if (tmp->sprev)
+					tmp->sprev->snext = tmp;
+				break;
+			}
+		}
+		if (!tmp->snext)
+			tmp->sprev = ht->stail, ht->stail->snext = tmp, ht->stail = tmp;
+		else if (!tmp->sprev)
+			ht->shead = tmp;
+	}
 	return (1);
 }
-
 
 /**
  * shash_table_get - get elemnt from shash table
@@ -64,16 +97,21 @@ int shash_table_set(shash_table_t *ht, const char *key, const char *value)
  */
 char *shash_table_get(const shash_table_t *ht, const char *key)
 {
+	shash_node_t *tmp;
 	unsigned long int i;
-	char *value;
 
 	if (!ht)
 		return (NULL);
 	i = key_index((const unsigned char *)key, ht->size);
-	if (get_node(&ht->array[i], key, &value))
-		return (NULL);
+	for (tmp = ht->array[i]; tmp; tmp = tmp->next)
+	{
+		if (!strcmp(key, tmp->key))
+		{
+			return (tmp->value);
+		}
+	}
 
-	return (value);
+	return (NULL);
 }
 
 /**
@@ -84,22 +122,52 @@ char *shash_table_get(const shash_table_t *ht, const char *key)
  */
 void shash_table_print(const shash_table_t *ht)
 {
-	unsigned long int i;
+	shash_node_t *tmp;
 	int first = 0;
 
 	if (!ht)
 		return;
 	putchar('{');
-	for (i = 0; i < ht->size; i++)
+	for (tmp = ht->shead; tmp; tmp = tmp->snext)
 	{
-		if (ht->array[i])
+		if (first++)
 		{
-			print_node(ht->array[i], &first);
+			putchar(',');
+			putchar(' ');
 		}
+		printf("'%s': '%s'", tmp->key, tmp->value);
 	}
 	putchar('}');
 	putchar('\n');
 }
+
+/**
+ * shash_table_print_rev - prints shash table in reverse
+ *
+ * @ht: ponter to the shash table
+ *
+ */
+void shash_table_print_rev(const shash_table_t *ht)
+{
+	shash_node_t *tmp;
+	int first = 0;
+
+	if (!ht)
+		return;
+	putchar('{');
+	for (tmp = ht->stail; tmp; tmp = tmp->sprev)
+	{
+		if (first++)
+		{
+			putchar(',');
+			putchar(' ');
+		}
+		printf("'%s': '%s'", tmp->key, tmp->value);
+	}
+	putchar('}');
+	putchar('\n');
+}
+
 
 
 /**
@@ -110,15 +178,18 @@ void shash_table_print(const shash_table_t *ht)
  */
 void shash_table_delete(shash_table_t *ht)
 {
-	unsigned long int i;
+	shash_node_t *tmp, *tmp1;
 
 	if (!ht)
 		return;
-	for (i = 0; i < ht->size; i++)
+	for (tmp = ht->shead; tmp; tmp = tmp1)
 	{
-		if (ht->array[i])
-			free_node(ht->array[i]);
+		tmp1 = tmp->snext;
+		free(tmp->key);
+		free(tmp->value);
+		free(tmp);
 	}
+
 	free(ht->array);
 	free(ht);
 }
