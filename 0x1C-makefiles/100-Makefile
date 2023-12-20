@@ -1,0 +1,37 @@
+# CC is the compiler as variable
+CC = gcc
+
+# SRC all the files to compile
+SRC = main.c school.c
+
+# NAME of the final file
+NAME = school
+
+# OBJ all .o files
+OBJ = $(SRC:.c=.o)
+
+# CFLAGS compiler flags
+CFLAGS = -Wall -Werror -Wextra -pedantic
+
+# all to make the exutable
+.PHONY : all
+all: m.h $(OBJ)
+	$(CC) $(OBJ) -o $(NAME)
+
+# clean deletes all Emacs and Vim temporary files along with the executable
+.PHONY : clean
+clean:
+	$(RM) *~ $(NAME)
+
+# oclean: deletes the object files
+.PHONY : oclean
+oclean:
+	$(RM) $(OBJ)
+
+# fclean: deletes all Emacs and Vim temporary files, the executable, and the object files
+.PHONY : fclean
+fclean: clean oclean
+
+# re: forces recompilation of all source files
+.PHONY : re
+re: oclean all
