@@ -1,0 +1,6 @@
+# all to make the exutable
+all: school
+
+# compile main.c and school.c
+school: main.c school.c
+	gcc $^ -o $@
