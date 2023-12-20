@@ -1,0 +1,12 @@
+# CC is the compiler as variable
+CC = gcc
+
+# SRC all the files to compile
+SRC = main.c school.c
+
+# all to make the exutable
+all: school
+
+# compile main.c and school.c
+school: $(SRC)
+	$(CC) $^ -o $@
