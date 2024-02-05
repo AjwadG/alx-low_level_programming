@@ -43,7 +43,7 @@ listint_t *jump_list(listint_t *list, size_t size, int value)
 	for (start = list; start->index < size; start = end)
 	{
 		end = step_list(start, n);
-		printf("Value checked array[%ld] = [%d]\n", end->index, end->n);
+		printf("Value checked at index [%ld] = [%d]\n", end->index, end->n);
 		if (value <= end->n || !end->next)
 			break;
 	}
@@ -52,7 +52,8 @@ listint_t *jump_list(listint_t *list, size_t size, int value)
 
 	for (; start && start != end->next ; start = start->next)
 	{
-		printf("Value checked array[%ld] = [%d]\n", start->index, start->n);
+		printf("Value checked at index [%ld] = [%d]\n", start->index,
+				start->n);
 		if (start->n == value)
 			return (start);
 	}
